@@ -8,4 +8,14 @@ import datetime
 def retrieve_users():
     return {"users": db["users"].rows}
 
-db = Database(sqlite3.connect("mockroblog.db"))
+@hug.get("/users/{username}")
+def retrieve_user(response, username: hug.types.text):
+    users = []
+    try:
+        user = db["users"].get(username)
+        users.append(user)
+    except sqlite_utils.db.NotFoundError:
+        response.status = hug.falcon.HTTP_404
+    return {"users": users}
+
+db = Database(sqlite3.connect("users.db"))

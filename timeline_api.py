@@ -2,8 +2,23 @@ import hug
 import sqlite3
 import sqlite_utils
 from sqlite_utils import Database
+import requests
+from requests.auth import HTTPBasicAuth
 import datetime
 
+def authenticate_user(username, password):
+    """Authenticates a user"""
+    #TODO implement user API
+    r = requests.get('https://api.github.com/user', auth=(username, password))
+    print(r.text)
+
+
+    # Delete non Request auth stuff
+    db = Database(sqlite3.connect("mockroblog.db"))
+    for user in db["users"].rows_where("username = ?", [username]):
+        if user["password"] == password:
+            return user
+    return False
 
 @hug.get("/public_timeline/")
 def public_timeline():
@@ -13,7 +28,19 @@ def public_timeline():
 def user_timeline(response, username: hug.types.text):
     posts = []
     try:
-        for row in db["posts"].rows_where("username = ?", [username]):
+        for row in db["posts"].rows_where("username = ? ORDER BY timestamp DESC", [username]):
+            print(row)
+            posts.append(row)
+    except sqlite_utils.db.NotFoundError:
+        response.status = hug.falcon.HTTP_404
+    return {"posts": posts}
+
+@hug.get("/home_timeline/{username}")
+def user_timeline(response, username: hug.types.text):
+    #TODO
+    posts = []
+    try:
+        for row in db["posts"].rows_where("username = ? ORDER BY timestamp DESC", [username]):
             print(row)
             posts.append(row)
     except sqlite_utils.db.NotFoundError:
@@ -30,7 +57,7 @@ def retrieve_post(response, id: hug.types.number):
         response.status = hug.falcon.HTTP_404
     return {"posts": posts}
 
-@hug.post("/posts/", status=hug.falcon.HTTP_201)
+@hug.post("/posts/", status=hug.falcon.HTTP_201, requires=authenticate_user("stan98", "p@ssw0rd")) 
 def create_post(
     username: hug.types.text,
     text: hug.types.text,
@@ -57,6 +84,7 @@ def create_post(
     return post
 
 def create_database():
+    """Create the site's database and tables and populate the tables"""
     # Create/Recreate database
     db = sqlite_utils.Database("mockroblog.db", recreate=True)
 
@@ -117,3 +145,4 @@ def create_database():
 # Create and connect to database
 create_database()
 db = Database(sqlite3.connect("mockroblog.db"))
+print(authenticate_user("stan98", "p@ssw0rd"))

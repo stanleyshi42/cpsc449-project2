@@ -3,22 +3,15 @@ import sqlite3
 import sqlite_utils
 from sqlite_utils import Database
 import requests
-from requests.auth import HTTPBasicAuth
 import datetime
 
 def authenticate_user(username, password):
     """Authenticates a user"""
     #TODO implement user API
-    r = requests.get('https://api.github.com/user', auth=(username, password))
-    print(r.text)
-
-
-    # Delete non Request auth stuff
-    db = Database(sqlite3.connect("mockroblog.db"))
-    for user in db["users"].rows_where("username = ?", [username]):
-        if user["password"] == password:
-            return user
-    return False
+    #r = requests.get('https://api.github.com/user', auth=(username, password))
+    r = requests.get('http://localhost:8000/users/'+username, auth=(username, password))
+    print(r.json)
+    
 
 @hug.get("/public_timeline/")
 def public_timeline():
@@ -57,7 +50,7 @@ def retrieve_post(response, id: hug.types.number):
         response.status = hug.falcon.HTTP_404
     return {"posts": posts}
 
-@hug.post("/posts/", status=hug.falcon.HTTP_201, requires=authenticate_user("stan98", "p@ssw0rd")) 
+@hug.post("/posts/", status=hug.falcon.HTTP_201, requires=authenticate_user) 
 def create_post(
     username: hug.types.text,
     text: hug.types.text,
@@ -83,66 +76,6 @@ def create_post(
     response.set_header("Location", f"/posts/{post['id']}")
     return post
 
-def create_database():
-    """Create the site's database and tables and populate the tables"""
-    # Create/Recreate database
-    db = sqlite_utils.Database("mockroblog.db", recreate=True)
-
-    # Create and populate users table
-    users = db["users"]
-    users.insert({
-        "username": "stan98",
-        "bio": "hello there!",
-        "email": "stan@email.com",
-        "password": "p@ssw0rd",
-        "following": ["john_johnson", "jack_jackson"],
-        "posts": [0, 1]
-    }, pk="username")
-
-    users.insert({
-        "username": "john_johnson",
-        "bio": ":)",
-        "email": "john@email.com",
-        "password": "abcdefg",
-        "following": ["stan98"],
-        "posts": []
-    }, pk="username")
-
-    users.insert({
-        "username": "jack_jackson",
-        "bio": ":(!",
-        "email": "jack@yahoo.com",
-        "password": "qwerty",
-        "following": ["john_johnson"],
-        "posts": [2]
-    }, pk = "username")
-
-    posts = db["posts"]
-    posts.insert({
-        "username": "stan98",
-        "text": "Hello world!",
-        "timestamp": datetime.datetime.now(),
-        "repost": False,
-        "id": 0
-    }, pk = "id")
-
-    posts.insert({
-        "username": "stan98",
-        "text": "thank god it's friday",
-        "timestamp": datetime.datetime.now(),
-        "repost": False,
-        "id": 1
-    }, pk = "id")
-
-    posts.insert({
-        "username": "jack_jackson",
-        "text": "asdf",
-        "timestamp": datetime.datetime.now(),
-        "repost": False,
-        "id": 2
-    }, pk = "id")
-
-# Create and connect to database
-create_database()
-db = Database(sqlite3.connect("mockroblog.db"))
-print(authenticate_user("stan98", "p@ssw0rd"))
+db = Database(sqlite3.connect("timelines.db"))
+#authenticate_user("stan98", "p@ssw0rd")
+#authenticate_user("stan98", "lol")

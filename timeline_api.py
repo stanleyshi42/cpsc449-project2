@@ -6,8 +6,34 @@ import datetime
 
 
 @hug.get("/posts/")
-def books():
+def posts():
     return {"posts": db["posts"].rows}
+
+@hug.post("/posts/", status=hug.falcon.HTTP_201)
+def create_post(
+    username: hug.types.text,
+    text: hug.types.text,
+    repost: hug.types.text,
+    response,
+):
+    posts = db["posts"]
+
+    post = {
+        "username": username,
+        "text": text,
+        "timestamp": datetime.datetime.now(),
+        "repost": repost,
+    }
+
+    try:
+        posts.insert(post)
+        post["id"] = posts.last_pk
+    except Exception as e:
+        response.status = hug.falcon.HTTP_409
+        return {"error": str(e)}
+
+    response.set_header("Location", f"/posts/{post['id']}")
+    return post
 
 def create_database():
     # Create/Recreate database

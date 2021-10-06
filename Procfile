@@ -1,2 +1,2 @@
-api: gunicorn --access-logfile - --capture-output timeline_api:__hug_wsgi__
-api: gunicorn --access-logfile - --capture-output user_api:__hug_wsgi__
+user_api: gunicorn --access-logfile - --capture-output -p $PORT user_api:__hug_wsgi__
+timeline_api: gunicorn --access-logfile - --capture-output timeline_api:__hug_wsgi__ 

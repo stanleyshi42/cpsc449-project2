@@ -5,6 +5,10 @@ from sqlite_utils import Database
 import datetime
 
 
+@hug.get("/posts/")
+def books():
+    return {"posts": db["posts"].rows}
+
 def create_database():
     # Create/Recreate database
     db = sqlite_utils.Database("mockroblog.db", recreate=True)

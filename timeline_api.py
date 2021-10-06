@@ -5,9 +5,20 @@ from sqlite_utils import Database
 import datetime
 
 
-@hug.get("/posts/")
-def posts():
+@hug.get("/public_timeline/")
+def public_timeline():
     return {"posts": db["posts"].rows}
+
+@hug.get("/user_timeline/{username}")
+def user_timeline(response, username: hug.types.text):
+    posts = []
+    try:
+        for row in db["posts"].rows_where("username = ?", [username]):
+            print(row)
+            posts.append(row)
+    except sqlite_utils.db.NotFoundError:
+        response.status = hug.falcon.HTTP_404
+    return {"posts": posts}
 
 @hug.get("/posts/{id}")
 def retrieve_post(response, id: hug.types.number):

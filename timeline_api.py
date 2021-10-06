@@ -9,6 +9,16 @@ import datetime
 def posts():
     return {"posts": db["posts"].rows}
 
+@hug.get("/posts/{id}")
+def retrieve_post(response, id: hug.types.number):
+    posts = []
+    try:
+        post = db["posts"].get(id)
+        posts.append(post)
+    except sqlite_utils.db.NotFoundError:
+        response.status = hug.falcon.HTTP_404
+    return {"posts": posts}
+
 @hug.post("/posts/", status=hug.falcon.HTTP_201)
 def create_post(
     username: hug.types.text,

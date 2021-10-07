@@ -13,28 +13,36 @@ def create_users_database():
         "username": "stan98",
         "bio": "hello there!",
         "email": "stan@email.com",
-        "password": "p@ssw0rd",
-        "following": ["john_johnson", "jack_jackson"],
-        "posts": [0, 1]
+        "password": "asdf",
     }, pk="username")
 
     users.insert({
         "username": "john_johnson",
         "bio": ":)",
-        "email": "john@email.com",
-        "password": "abcdefg",
-        "following": ["stan98"],
-        "posts": []
-    }, pk="username")
+        "email": "john@gmail.com",
+        "password": "PassWord",
+    })
 
     users.insert({
         "username": "jack_jackson",
         "bio": ":(!",
         "email": "jack@yahoo.com",
         "password": "qwerty",
-        "following": ["john_johnson"],
-        "posts": [2]
-    }, pk = "username")
+    })
+
+    # Create and populate following table
+    following = db["following"]
+    following.insert({
+        "id": 0,
+        "follower_id": "stan98",
+        "following_id": "john_johnson",
+    }, pk="id", foreign_keys=[("follower_id", "users", "username"), ("following_id", "users", "username")])
+
+    following.insert({
+        "id": 1,
+        "follower_id": "stan98",
+        "following_id": "jack_jackson",
+    })
 
 def create_timelines_database():
     # Create/Recreate database
@@ -42,28 +50,28 @@ def create_timelines_database():
 
     posts = db["posts"]
     posts.insert({
+        "id": 0,
         "username": "stan98",
         "text": "Hello world!",
         "timestamp": datetime.datetime.now(),
         "repost": False,
-        "id": 0
     }, pk = "id")
 
     posts.insert({
+        "id": 1,
         "username": "stan98",
         "text": "thank god it's friday",
         "timestamp": datetime.datetime.now(),
         "repost": False,
-        "id": 1
-    }, pk = "id")
+    })
 
     posts.insert({
+        "id": 2,
         "username": "jack_jackson",
-        "text": "asdf",
+        "text": "is this thing working",
         "timestamp": datetime.datetime.now(),
         "repost": False,
-        "id": 2
-    }, pk = "id")
+    })
 
 create_users_database()
 create_timelines_database()

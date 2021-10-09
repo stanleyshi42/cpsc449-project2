@@ -31,3 +31,31 @@ def retrieve_following(response, username: hug.types.text):
     except sqlite_utils.db.NotFoundError:
         response.status = hug.falcon.HTTP_404
     return {"users": users}
+
+
+@hug.post("/users/", status=hug.falcon.HTTP_201)
+def create_user(
+    username: hug.types.text,
+    bio: hug.types.text,
+    email: hug.types.text,
+    password: hug.types.text,
+    response,
+):
+    """POST a new user"""
+    users = db["users"]
+
+    user = {
+        "username": username,
+        "bio": bio,
+        "email": email,
+        "password": password,
+    }
+
+    try:
+        users.insert(user)
+    except Exception as e:
+        response.status = hug.falcon.HTTP_409
+        return {"error": str(e)}
+
+    response.set_header("Location", f"/users/{user['username']}")
+    return user

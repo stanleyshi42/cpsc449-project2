@@ -4,6 +4,9 @@ import sqlite_utils
 from sqlite_utils import Database
 import datetime
 
+
+db = Database(sqlite3.connect("users.db"))
+
 @hug.get("/users/")
 def retrieve_users():
     return {"users": db["users"].rows}
@@ -18,4 +21,13 @@ def retrieve_user(response, username: hug.types.text):
         response.status = hug.falcon.HTTP_404
     return {"users": users}
 
-db = Database(sqlite3.connect("users.db"))
+@hug.get("/users/{username}/following")
+def retrieve_following(response, username: hug.types.text):
+    """GETs a user's following list"""
+    users = []
+    try:
+        for row in db["following"].rows_where("follower_id = ?", [username]):
+            users.append(row)
+    except sqlite_utils.db.NotFoundError:
+        response.status = hug.falcon.HTTP_404
+    return {"users": users}

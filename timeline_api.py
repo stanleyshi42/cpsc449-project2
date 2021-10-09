@@ -11,22 +11,21 @@ db = Database(sqlite3.connect("timelines.db"))
 
 def authenticate_user(username, password):
     """Authenticates a user"""
-    print('auth called')
-    r = requests.get("http://localhost:8000/users/"+username)
+    r = requests.get("http://localhost:8000/users/" + username)
     user = json.loads(r.text)
     user = user["users"][0]
     if user["password"] == password:
-        print('auth passed')
         return user
-    print('auth failed')
     return False
 
 @hug.get("/public_timeline/")
 def public_timeline():
+    """GET the Public Timeline; sorted by timestamp"""
     return {"posts": db["posts"].rows_where(order_by = "timestamp desc")}
 
 @hug.get("/user_timeline/{username}")
 def user_timeline(response, username: hug.types.text):
+    """GET the User Timeline for a specific user; sorted by timestamp"""
     posts = []
     try:
         for row in db["posts"].rows_where("username = ?", [username], order_by = "timestamp desc"):
@@ -35,10 +34,15 @@ def user_timeline(response, username: hug.types.text):
         response.status = hug.falcon.HTTP_404
     return {"posts": posts}
 
-@hug.get("/home_timeline/{username}", requires=authenticate_user)
-def home_timeline(response, username: hug.types.text):
+@hug.get("/home_timeline", requires=hug.authentication.basic(authenticate_user))
+def home_timeline(
+    response,
+    user: hug.directives.user,
+):
     #TODO
     posts = []
+    username = user["username"]
+    # GET user's following list
     try:
         for row in db["posts"].rows_where("username = ? ORDER BY timestamp DESC", [username]):
             posts.append(row)
@@ -48,6 +52,7 @@ def home_timeline(response, username: hug.types.text):
 
 @hug.get("/posts/{id}")
 def retrieve_post(response, id: hug.types.number):
+    """GET a post by its ID"""
     posts = []
     try:
         post = db["posts"].get(id)
@@ -56,18 +61,18 @@ def retrieve_post(response, id: hug.types.number):
         response.status = hug.falcon.HTTP_404
     return {"posts": posts}
 
-@hug.post("/posts/", status=hug.falcon.HTTP_201, requires=hug.authentication.basic(authenticate_user('stan98', 'p@ssw0rd')))
+@hug.post("/posts/", status=hug.falcon.HTTP_201, requires=hug.authentication.basic(authenticate_user))
 def create_post(
-    username: hug.types.text,
+    user: hug.directives.user,
     text: hug.types.text,
     repost: hug.types.text,
     response,
-    user: hug.directives.user,
 ):
+    """POST a user's post"""
     posts = db["posts"]
 
     post = {
-        "username": username,
+        "username": user["username"],
         "text": text,
         "timestamp": datetime.datetime.now(),
         "repost": repost,

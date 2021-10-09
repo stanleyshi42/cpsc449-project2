@@ -21,11 +21,12 @@ def authenticate_user(username, password):
 @hug.get("/public_timeline/")
 def public_timeline():
     """GET the Public Timeline; sorted by timestamp"""
+    # Return in JSON format
     return {"posts": db["posts"].rows_where(order_by = "timestamp desc")}
 
 @hug.get("/user_timeline/{username}")
 def user_timeline(response, username: hug.types.text):
-    """GET the User Timeline for a specific user; sorted by timestamp"""
+    """GET a user's User Timeline; sorted by timestamp"""
     posts = []
     try:
         for row in db["posts"].rows_where("username = ?", [username], order_by = "timestamp desc"):
@@ -34,18 +35,28 @@ def user_timeline(response, username: hug.types.text):
         response.status = hug.falcon.HTTP_404
     return {"posts": posts}
 
-@hug.get("/home_timeline", requires=hug.authentication.basic(authenticate_user))
+@hug.get("/home_timeline/", requires=hug.authentication.basic(authenticate_user))
 def home_timeline(
     response,
     user: hug.directives.user,
 ):
-    #TODO
+    """GET a user's Home Timeline; sorted by timestamp"""
     posts = []
     username = user["username"]
-    # GET user's following list
+
+    # GET all the users the user is following
+    r = requests.get("http://localhost:8000/users/" + username + "/following")
+    r = json.loads(r.text)
+    following_list = []
+    for row in r["users"]:
+        following_list.append(row["following_id"])
+
+    # Query posts from users being followed
     try:
-        for row in db["posts"].rows_where("username = ? ORDER BY timestamp DESC", [username]):
-            posts.append(row)
+        for following_id in following_list:
+            for row in db["posts"].rows_where("username = ?", [following_id]):
+                posts.append(row)
+        posts.sort(key=lambda post: post["timestamp"], reverse=True)
     except sqlite_utils.db.NotFoundError:
         response.status = hug.falcon.HTTP_404
     return {"posts": posts}

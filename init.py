@@ -20,12 +20,12 @@ def create_users_database():
         "username": "john_johnson",
         "bio": ":)",
         "email": "john@gmail.com",
-        "password": "PassWord",
+        "password": "password",
     })
 
     users.insert({
         "username": "jack_jackson",
-        "bio": ":(!",
+        "bio": ":(",
         "email": "jack@yahoo.com",
         "password": "qwerty",
     })
@@ -44,6 +44,24 @@ def create_users_database():
         "following_id": "jack_jackson",
     })
 
+    following.insert({
+        "id": 2,
+        "follower_id": "john_johnson",
+        "following_id": "stan98",
+    })
+
+    following.insert({
+        "id": 3,
+        "follower_id": "john_johnson",
+        "following_id": "jack_jackson",
+    })
+
+    following.insert({
+        "id": 4,
+        "follower_id": "jack_jackson",
+        "following_id": "stan98",
+    })
+
 def create_timelines_database():
     # Create/Recreate database
     db = sqlite_utils.Database("timelines.db", recreate=True)
@@ -53,7 +71,7 @@ def create_timelines_database():
         "id": 0,
         "username": "stan98",
         "text": "Hello world!",
-        "timestamp": datetime.datetime.now(),
+        "timestamp": "2012-9-06T16:12:15",
         "repost": False,
     }, pk = "id")
 
@@ -61,7 +79,7 @@ def create_timelines_database():
         "id": 1,
         "username": "stan98",
         "text": "thank god it's friday",
-        "timestamp": datetime.datetime.now(),
+        "timestamp": "2021-10-01T12:16:17",
         "repost": False,
     })
 
@@ -70,6 +88,30 @@ def create_timelines_database():
         "username": "jack_jackson",
         "text": "is this thing working",
         "timestamp": datetime.datetime.now(),
+        "repost": False,
+    })
+
+    posts.insert({
+        "id": 3,
+        "username": "john_johnson",
+        "text": "i h8 mondays",
+        "timestamp": "2019-9-06T07:12:10",
+        "repost": False,
+    })
+
+    posts.insert({
+        "id": 4,
+        "username": "stan98",
+        "text": "covfefe",
+        "timestamp": "2018-9-06T15:16:38",
+        "repost": False,
+    })
+
+    posts.insert({
+        "id": 5,
+        "username": "jack_jackson",
+        "text": "need coffee",
+        "timestamp": "2018-9-06T06:16:59",
         "repost": False,
     })
 

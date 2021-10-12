@@ -7,7 +7,7 @@ import datetime
 import json
 
 
-db = Database(sqlite3.connect("timelines.db"))
+db = Database(sqlite3.connect("./var/posts.db"))
 
 def authenticate_user(username, password):
     """Authenticates a user"""

@@ -4,7 +4,7 @@ import sqlite_utils
 from sqlite_utils import Database
 
 
-db = Database(sqlite3.connect("users.db"))
+db = Database(sqlite3.connect("./var/users.db"))
 
 @hug.get("/users/")
 def retrieve_users():

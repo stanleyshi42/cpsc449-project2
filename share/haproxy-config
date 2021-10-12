@@ -1,0 +1,15 @@
+frontend http_front
+   bind *:80
+   stats uri /haproxy?stats
+   acl url_blog path_beg /users
+   use_backend blog_back if url_blog
+   default_backend http_back
+
+backend http_back
+   balance roundrobin
+   server timeline_api1 127.0.0.1:8100 check
+   server timeline_api2 127.0.0.1:8101 check
+   server timeline_api3 127.0.0.1:8102 check
+
+backend blog_back
+   server user_api 127.0.0.1:8000 check

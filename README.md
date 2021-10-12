@@ -38,15 +38,13 @@ http GET localhost:80/users
 ```
 
 ## Starting Multiple Instances
-We can run multiple instances of each service by using the foreman --formation, or -m, switch. 
-
-Run the following to run 1 instance of the user service and 3 instances of the timeline service:
+We can run multiple instances of each service by using the foreman --formation, or -m, switch. Run the following to run 1 instance of the user service and 3 instances of the timeline service:
 ```bash
 foreman start -m "user_api=1, timeline_api=3"
 ```
 
 ## Load Balancing
-We can configure HAProxy to perform load balancing between the 3 instances of the timeline service. To do this, append the contents of share/haproxy-config to the end of HAProxy's config file. To edit HAProxy's config file, use:
+We can configure HAProxy to perform load balancing between the 3 instances of the timeline service. To do this, append the contents of share/haproxy-config.txt to the end of HAProxy's config file. To edit HAProxy's config file, use:
 ```bash
 sudo nano /etc/haproxy/haproxy.cfg
 ```
@@ -55,10 +53,14 @@ sudo nano /etc/haproxy/haproxy.cfg
 * Procfile
 * timeline_api.py
 * user_api.py
-* readme.md
+* README.md
 * bin/init.sh
+  * Script for creating the project's databases
 * share/following.csv
 * share/posts.csv
 * share/users.csv
+* share/haproxy-config
+  * Contains additional configuration for HAProxy's config file
+  * Used to add load balancing to the project
 * var/
   * An empty directory that will hold our databases

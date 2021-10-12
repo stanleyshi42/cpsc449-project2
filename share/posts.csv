@@ -1,0 +1,11 @@
+id,username,text,timestamp,repost
+0,stan98,Hello world!,2012-09-06T16:12:15,FALSE
+1,stan98,thank god it's friday,2021-10-01T12:16:17,FALSE
+2,jack_jackson,is this thing working?,2021-07-16T17:10:46,FALSE
+3,john_johnson,i h8 mondays,2019-09-06T07:12:10,FALSE
+4,stan98,i h8 mondays,2019-09-06T09:43:42,localhost:80/posts/3
+5,stan98,covfefe,2018-09-16T15:16:38,FALSE
+6,jack_jackson,Need coffee x(,2018-11-06T06:16:59,FALSE
+7,bob_bobson,stubbed my toe :(,2018-12-23T16:39:28,FALSE
+8,jack_jackson,omg facebook’s been down for hours,2021-10-04T12:19:30,FALSE
+9,john_johnson,#facebookdown,2021-10-04T13:11:12,FALSE

@@ -1,0 +1,9 @@
+id,follower_id,following_id
+0,stan98,john_johnson
+1,stan98,jack_jackson
+2,john_johnson,stan98
+3,john_johnson,jack_jackson
+4,jack_jackson,stan98
+5,bob_bobson,jack_jackson
+6,john_johnson,bob_bobson
+7,jack_jackson,bob_bobson

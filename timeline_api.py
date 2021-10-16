@@ -4,7 +4,6 @@ import sqlite_utils
 from sqlite_utils import Database
 import requests
 import datetime
-import json
 
 
 db = Database(sqlite3.connect("./var/posts.db"))
@@ -12,8 +11,9 @@ db = Database(sqlite3.connect("./var/posts.db"))
 def authenticate_user(username, password):
     """Authenticates a user"""
     r = requests.get("http://localhost:8000/users/" + username)
-    user = json.loads(r.text)
-    user = user["users"][0]
+    user = r.json()
+    user = user["users"][0]     # Gets the user we want to auth
+
     if user["password"] == password:
         return user
     return False
@@ -46,12 +46,12 @@ def home_timeline(
 
     # GET all the users the user is following
     r = requests.get("http://localhost:8000/users/" + username + "/following")
-    r = json.loads(r.text)
+    r = r.json()
     following_list = []
     for row in r["users"]:
         following_list.append(row["following_id"])
 
-    # Query posts from users being followed
+    # Query all posts from users being followed
     try:
         for following_id in following_list:
             for row in db["posts"].rows_where("username = ?", [following_id]):

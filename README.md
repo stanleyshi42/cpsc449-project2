@@ -29,6 +29,7 @@ Start both microservices:
 foreman start
 ```
 
+Open a new terminal.
 Now, we can make calls to the project's API:
 ```bash
 http GET localhost:80/public_timeline

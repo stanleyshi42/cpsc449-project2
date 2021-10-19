@@ -38,7 +38,7 @@ http GET localhost:80/users
 ```
 
 ## User Authentication
-Some of the API endpoints, like /home_timeline/, require user authentication. To enter user authentication with HTTPie, use the -a flag:
+Some of the API endpoints, like /home_timeline/, require user authentication. To enter user authentication information with HTTPie, use the -a flag:
 ```bash
 http -a username:password GET localhost:80/home_timeline
 ```

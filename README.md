@@ -64,3 +64,29 @@ sudo nano /etc/haproxy/haproxy.cfg
   * Used to add load balancing to the project
 * var/
   * An empty directory that will hold our databases
+  
+## AP Endpoints
+### Timeline Service
+* GET /public_timeline/
+  * Returns Public Timeline
+* GET /user_timeline/{username}
+  * Returns the User Timeline of a specific user
+* GET /home_timeline/
+  * Returns the Home Timeline of a specific, authenticated user
+* GET /posts/{id}
+  * Return a specific post by ID
+* POST /posts/
+  * Creates a post
+
+### User Service
+* GET /users/
+  * Returns all users
+* GET /users/{username}
+  * Returns a specific user by username
+* POST /users/
+  * Creates a new user
+* GET /users/{username}/following/
+  * Gets a user's following list
+* POST /users/{username}/following/
+  * Adds a new user to a specific user's following list
+

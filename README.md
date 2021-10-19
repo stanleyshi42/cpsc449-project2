@@ -65,7 +65,7 @@ sudo nano /etc/haproxy/haproxy.cfg
 * var/
   * An empty directory that will hold our databases
   
-## AP Endpoints
+## API Endpoints
 ### Timeline Service
 * GET /public_timeline/
   * Returns Public Timeline

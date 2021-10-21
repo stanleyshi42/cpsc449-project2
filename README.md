@@ -13,7 +13,7 @@ python3 -m pip install hug sqlite-utils
 sudo apt install --yes haproxy gunicorn
 ```
 
-Configure HAProxy by copying /share/haproxy.cfg to /etc/haproxy/haproxy.cfg. Then, restart HAProxy:
+Configure HAProxy by copying /haproxy.cfg to /etc/haproxy/haproxy.cfg. Then, restart HAProxy:
 ```bash
 sudo systemctl restart haproxy
 ```

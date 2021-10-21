@@ -5,7 +5,7 @@ In this project, we've built 2 RESTful back-end services for a mock microbloggin
 - Stanley Shi
 
 ## Setup
-* Install project requirements:
+Install project requirements:
 ```bash
 sudo apt update
 sudo apt install --yes python3-pip ruby-foreman httpie sqlite3
@@ -13,17 +13,17 @@ python3 -m pip install hug sqlite-utils
 sudo apt install --yes haproxy gunicorn
 ```
 
-* Configure HAProxy by copying /share/haproxy.cfg to /etc/haproxy/haproxy.cfg. Then, restart HAProxy:
+Configure HAProxy by copying /share/haproxy.cfg to /etc/haproxy/haproxy.cfg. Then, restart HAProxy:
 ```bash
 sudo systemctl restart haproxy
 ```
 
-* Navigate to the project directory:
+Navigate to the project directory:
 ```bash
 cd cpsc449-project2
 ```
 
-* Create databases:
+Create databases:
 ```bash
 ./bin/init.sh
 ```

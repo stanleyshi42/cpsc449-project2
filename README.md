@@ -65,14 +65,13 @@ foreman start -m "user_api=1, timeline_api=3"
 * timeline_api.py
 * user_api.py
 * README.md
+* haproxy-config
+  * Configuration file for HAProxy
 * bin/init.sh
   * Script for creating the project's databases
 * share/following.csv
 * share/posts.csv
 * share/users.csv
-* share/haproxy-config
-  * Contains additional configuration for HAProxy's config file
-  * Used to add load balancing to the project
 * var/
   * An empty directory that will hold our databases
   
